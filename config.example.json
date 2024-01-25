@@ -1,0 +1,12 @@
+{
+  "monitor": {
+    "interval": 15,
+    "servers": [
+      "quake.se:28501",
+      "quake.se:28502",
+      "quake.se:28503",
+      "quake.se:28504"
+    ],
+    "channel": "activity"
+  }
+}

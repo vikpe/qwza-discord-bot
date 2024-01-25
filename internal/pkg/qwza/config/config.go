@@ -10,8 +10,9 @@ type Config struct {
 }
 
 type Monitor struct {
-	Servers []string `json:"servers"`
-	Channel string   `json:"channel"`
+	Interval int      `json:"interval"`
+	Servers  []string `json:"servers"`
+	Channel  string   `json:"channel"`
 }
 
 func FromFile(path string) (*Config, error) {
