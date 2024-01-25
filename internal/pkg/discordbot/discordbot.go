@@ -13,6 +13,7 @@ type Bot struct {
 	session *discordgo.Session
 	guildID string
 	OnReady func(s *discordgo.Session)
+	OnStop  func()
 }
 
 func New(token string, guildId string) (*Bot, error) {
@@ -27,6 +28,9 @@ func New(token string, guildId string) (*Bot, error) {
 		guildID: guildId,
 		OnReady: func(s *discordgo.Session) {
 			log.Println(fmt.Sprintf("%s is ready", s.State.User.Username))
+		},
+		OnStop: func() {
+			log.Println("Shutting down.")
 		},
 	}, nil
 }
@@ -49,5 +53,5 @@ func (b *Bot) Start() {
 	log.Println("Press Ctrl+C to exit")
 	<-stop
 
-	log.Println("Gracefully shutting down.")
+	b.OnStop()
 }
