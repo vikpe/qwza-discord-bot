@@ -10,7 +10,7 @@ type Config struct {
 }
 
 type Monitor struct {
-	Interval int      `json:"interval"`
+	Interval uint64   `json:"interval"`
 	Servers  []string `json:"servers"`
 	Channel  string   `json:"channel"`
 }
