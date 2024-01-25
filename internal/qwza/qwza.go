@@ -43,5 +43,5 @@ func ToPlayersJoinedMessage(server qserver.GenericServer, clients []qclient.Clie
 	})
 	playerNamesList := ToNaturalList(playerNames)
 	mvdsv := convert.ToMvdsv(server)
-	return fmt.Sprintf("%s joined %s - %s on %s (%d/%d, %d specs)", playerNamesList, server.Address, mvdsv.Mode, mvdsv.Settings.Get("map", "unknown"), mvdsv.PlayerSlots.Used, mvdsv.PlayerSlots.Total, mvdsv.SpectatorSlots.Used)
+	return fmt.Sprintf("%s joined %s - %s on %s (%d/%d players, %d specs)", playerNamesList, server.Address, mvdsv.Mode, mvdsv.Settings.Get("map", "unknown"), mvdsv.PlayerSlots.Used, mvdsv.PlayerSlots.Total, mvdsv.SpectatorSlots.Used)
 }
