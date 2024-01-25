@@ -1,0 +1,5 @@
+.idea/
+.env
+./qwza
+coverage.out
+config.json
