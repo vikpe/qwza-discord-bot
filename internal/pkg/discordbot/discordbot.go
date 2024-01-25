@@ -55,3 +55,7 @@ func (b *Bot) Start() {
 
 	b.OnStop()
 }
+
+func (b *Bot) Say(channelId string, message string) {
+	b.session.ChannelMessageSend(channelId, message)
+}

@@ -1,4 +1,4 @@
-package monitor
+package qwza
 
 import (
 	"github.com/samber/lo"
@@ -8,21 +8,16 @@ import (
 	"github.com/vikpe/serverstat/qserver/qclient"
 )
 
-func New(serversAddresses []string, onPlayersJoined func(server qserver.GenericServer, clients []qclient.Client)) *task.PeriodicalTask {
+func NewMonitorTask(serversAddresses []string, onPlayersJoined func(server qserver.GenericServer, clients []qclient.Client)) *task.PeriodicalTask {
 	statClient := serverstat.NewClient()
 	playerIdsPerServer := map[string][]int{}
 	isFirstTick := true
 
 	onTick := func() {
-		if isFirstTick {
-			isFirstTick = false
-			return
-		}
-
 		serverInfo := statClient.GetInfoFromMany(serversAddresses)
 
 		for _, server := range serverInfo {
-			currentPlayerIds := lo.Map(server.Players(), func(player qclient.Client, index int) int {
+			currentPlayerIds := lo.Map(server.Clients, func(player qclient.Client, index int) int {
 				return player.Id
 			})
 
@@ -32,11 +27,15 @@ func New(serversAddresses []string, onPlayersJoined func(server qserver.GenericS
 				return lo.Contains(newPlayerIds, player.Id)
 			})
 
-			if len(newPlayers) > 0 {
+			if len(newPlayers) > 0 && !isFirstTick {
 				onPlayersJoined(server, newPlayers)
 			}
 
 			playerIdsPerServer[server.Address] = currentPlayerIds
+		}
+
+		if isFirstTick {
+			isFirstTick = false
 		}
 	}
 
