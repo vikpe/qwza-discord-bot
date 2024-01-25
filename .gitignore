@@ -1,5 +1,6 @@
 .idea/
 .env
-./qwza
+qwza
+!internal/qwza
 coverage.out
 config.json
