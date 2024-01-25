@@ -24,7 +24,7 @@ func NewMonitorTask(serversAddresses []string, onClientsJoined func(server qserv
 			newClientIds, _ := lo.Difference(currentClientIds, clientIdsPerServer[server.Address])
 
 			newClients := lo.Filter(server.Clients, func(player qclient.Client, index int) bool {
-				return lo.Contains(newClientIds, player.Id)
+				return player.Name.ToPlainString() != "[ServeMe]" && lo.Contains(newClientIds, player.Id)
 			})
 
 			if len(newClients) > 0 && !isFirstTick {
