@@ -8,30 +8,30 @@ import (
 	"github.com/vikpe/serverstat/qserver/qclient"
 )
 
-func NewMonitorTask(serversAddresses []string, onPlayersJoined func(server qserver.GenericServer, clients []qclient.Client)) *task.PeriodicalTask {
+func NewMonitorTask(serversAddresses []string, onClientsJoined func(server qserver.GenericServer, clients []qclient.Client)) *task.PeriodicalTask {
 	statClient := serverstat.NewClient()
-	playerIdsPerServer := map[string][]int{}
+	clientIdsPerServer := map[string][]int{}
 	isFirstTick := true
 
 	onTick := func() {
 		serverInfo := statClient.GetInfoFromMany(serversAddresses)
 
 		for _, server := range serverInfo {
-			currentPlayerIds := lo.Map(server.Clients, func(player qclient.Client, index int) int {
+			currentClientIds := lo.Map(server.Clients, func(player qclient.Client, index int) int {
 				return player.Id
 			})
 
-			newPlayerIds, _ := lo.Difference(currentPlayerIds, playerIdsPerServer[server.Address])
+			newClientIds, _ := lo.Difference(currentClientIds, clientIdsPerServer[server.Address])
 
-			newPlayers := lo.Filter(server.Players(), func(player qclient.Client, index int) bool {
-				return lo.Contains(newPlayerIds, player.Id)
+			newClients := lo.Filter(server.Clients, func(player qclient.Client, index int) bool {
+				return lo.Contains(newClientIds, player.Id)
 			})
 
-			if len(newPlayers) > 0 && !isFirstTick {
-				onPlayersJoined(server, newPlayers)
+			if len(newClients) > 0 && !isFirstTick {
+				onClientsJoined(server, newClients)
 			}
 
-			playerIdsPerServer[server.Address] = currentPlayerIds
+			clientIdsPerServer[server.Address] = currentClientIds
 		}
 
 		if isFirstTick {
